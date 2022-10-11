@@ -1,0 +1,66 @@
+[gd_scene load_steps=12 format=3 uid="uid://67piyy54oaca"]
+
+[ext_resource type="PackedScene" uid="uid://dojoih48o45st" path="res://shader_floor.tscn" id="1_p2qgk"]
+[ext_resource type="Script" path="res://scripts/light_pivot.gd" id="2_5ef06"]
+[ext_resource type="PackedScene" uid="uid://dufttrulwpiw5" path="res://particles.tscn" id="3_kc1kv"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1anqv"]
+albedo_color = Color(0.113725, 0.541176, 0.929412, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_6iyma"]
+material = SubResource("StandardMaterial3D_1anqv")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7y35u"]
+albedo_color = Color(0.121569, 0.658824, 0.580392, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_p6bdf"]
+material = SubResource("StandardMaterial3D_7y35u")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gsct4"]
+albedo_color = Color(0.976471, 0.0509804, 0, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_k8nwq"]
+material = SubResource("StandardMaterial3D_gsct4")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qbg5n"]
+albedo_color = Color(0.898039, 0.866667, 0.262745, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_leh8y"]
+material = SubResource("StandardMaterial3D_qbg5n")
+
+[node name="viewable" type="Node3D"]
+
+[node name="shader_floor" parent="." instance=ExtResource("1_p2qgk")]
+gravity_scale = 0.0
+refresh_rate = 0.2
+
+[node name="Camera3d" type="Camera3D" parent="."]
+transform = Transform3D(0.707107, -0.298836, 0.640856, 0, 0.906308, 0.422618, -0.707107, -0.298836, 0.640856, 35, 9, 35)
+
+[node name="debug" type="Node3D" parent="."]
+
+[node name="x = -25" type="MeshInstance3D" parent="debug"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25, 0, 0)
+mesh = SubResource("CapsuleMesh_6iyma")
+
+[node name="x = +25" type="MeshInstance3D" parent="debug"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 0, 0)
+mesh = SubResource("CapsuleMesh_p6bdf")
+
+[node name="z = -25" type="MeshInstance3D" parent="debug"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -25)
+mesh = SubResource("CapsuleMesh_k8nwq")
+
+[node name="z = +25" type="MeshInstance3D" parent="debug"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 25)
+mesh = SubResource("CapsuleMesh_leh8y")
+
+[node name="light_pivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 70, 0)
+script = ExtResource("2_5ef06")
+
+[node name="DirectionalLight3d" type="DirectionalLight3D" parent="light_pivot"]
+transform = Transform3D(1, 0, 0, 0, 0.766044, 0.642788, 0, -0.642788, 0.766044, 0, 0, 60)
+shadow_enabled = true
+
+[node name="particles" parent="." instance=ExtResource("3_kc1kv")]

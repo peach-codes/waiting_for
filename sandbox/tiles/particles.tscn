@@ -1,0 +1,25 @@
+[gd_scene load_steps=6 format=3 uid="uid://dufttrulwpiw5"]
+
+[ext_resource type="Shader" path="res://shaders/first_particle.gdshader" id="1_ql16h"]
+[ext_resource type="Shader" path="res://shaders/first_particle_material.gdshader" id="2_l76p6"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_g1pyl"]
+shader = ExtResource("1_ql16h")
+shader_parameter/SCALE = 1.0
+shader_parameter/START_POS = Vector3(0, 10, 0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uwjxt"]
+render_priority = 0
+shader = ExtResource("2_l76p6")
+
+[sub_resource type="SphereMesh" id="SphereMesh_g0plh"]
+material = SubResource("ShaderMaterial_uwjxt")
+
+[node name="particles" type="Node3D"]
+
+[node name="GpuParticles3d" type="GPUParticles3D" parent="."]
+amount = 150
+lifetime = 15.0
+speed_scale = 1.46
+process_material = SubResource("ShaderMaterial_g1pyl")
+draw_pass_1 = SubResource("SphereMesh_g0plh")

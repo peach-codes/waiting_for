@@ -1,0 +1,32 @@
+[gd_scene load_steps=8 format=3 uid="uid://dojoih48o45st"]
+
+[ext_resource type="Shader" path="res://shaders/vis_floor.gdshader" id="1_8qx5k"]
+[ext_resource type="Script" path="res://scripts/shader_floor.gd" id="1_gh33p"]
+[ext_resource type="Script" path="res://scripts/col_floor.gd" id="2_b81si"]
+[ext_resource type="Script" path="res://scripts/vis_floor.gd" id="3_500ut"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_o7jff"]
+render_priority = 0
+shader = ExtResource("1_8qx5k")
+shader_parameter/colors = PackedVector3Array(0.1, 0.1, 0.3, 0.14, 0.03, 0.1)
+shader_parameter/ripple_seed = 56.0
+shader_parameter/time_bias = -1.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_sxbau"]
+material = SubResource("ShaderMaterial_o7jff")
+size = Vector2(100, 100)
+subdivide_width = 200
+subdivide_depth = 200
+
+[sub_resource type="HeightMapShape3D" id="HeightMapShape3D_4p2ig"]
+
+[node name="shader_floor" type="RigidBody3D"]
+script = ExtResource("1_gh33p")
+
+[node name="vis_floor" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_sxbau")
+script = ExtResource("3_500ut")
+
+[node name="col_floor" type="CollisionShape3D" parent="."]
+shape = SubResource("HeightMapShape3D_4p2ig")
+script = ExtResource("2_b81si")
