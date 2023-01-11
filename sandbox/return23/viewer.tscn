@@ -1,0 +1,223 @@
+[gd_scene load_steps=28 format=3 uid="uid://btn2e0wyyxb86"]
+
+[ext_resource type="Script" path="res://viewer.gd" id="1_031a4"]
+[ext_resource type="Shader" path="res://simple0.gdshader" id="1_ufaub"]
+[ext_resource type="Shader" path="res://donut0.gdshader" id="2_aa20t"]
+[ext_resource type="Script" path="res://CameraPivot.gd" id="2_wq3aa"]
+[ext_resource type="Script" path="res://vis_floor.gd" id="3_3th1r"]
+[ext_resource type="Script" path="res://character.gd" id="3_o0nt8"]
+[ext_resource type="Shader" path="res://exit_arch.gdshader" id="6_ab2so"]
+[ext_resource type="Shader" path="res://inner_torus.gdshader" id="7_5ndi4"]
+[ext_resource type="Shader" path="res://indicator.gdshader" id="8_0lnq2"]
+[ext_resource type="Script" path="res://indicator_pivot.gd" id="8_k7egh"]
+[ext_resource type="Shader" path="res://text.gdshader" id="11_crk7n"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ocfsm"]
+render_priority = 0
+shader = ExtResource("1_ufaub")
+shader_parameter/color_in = PackedVector3Array(0.2, 0, 0, 0, 0, 0.8)
+shader_parameter/progress = null
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_fr568"]
+material = SubResource("ShaderMaterial_ocfsm")
+size = Vector2(10, 10)
+subdivide_width = 10
+subdivide_depth = 10
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_aevtw"]
+size = Vector3(10, 0.1, 10)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cpom3"]
+render_priority = 0
+shader = ExtResource("2_aa20t")
+
+[sub_resource type="TorusMesh" id="TorusMesh_bcvsf"]
+material = SubResource("ShaderMaterial_cpom3")
+inner_radius = 0.215
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_vf655"]
+height = 0.7
+radius = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0xh5e"]
+render_priority = 0
+shader = ExtResource("6_ab2so")
+
+[sub_resource type="TorusMesh" id="TorusMesh_wvskd"]
+material = SubResource("ShaderMaterial_0xh5e")
+inner_radius = 0.785
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ouhwl"]
+height = 0.1
+radius = 0.889
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2fneg"]
+render_priority = 0
+shader = ExtResource("7_5ndi4")
+shader_parameter/heyo = null
+
+[sub_resource type="TorusMesh" id="TorusMesh_n63fl"]
+material = SubResource("ShaderMaterial_2fneg")
+inner_radius = 0.2
+outer_radius = 0.4
+
+[sub_resource type="Curve" id="Curve_uqavd"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 1.4, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_g43xh"]
+render_priority = 0
+shader = ExtResource("8_0lnq2")
+shader_parameter/progress = null
+
+[sub_resource type="TubeTrailMesh" id="TubeTrailMesh_ea12p"]
+material = SubResource("ShaderMaterial_g43xh")
+sections = 10
+cap_top = false
+cap_bottom = false
+curve = SubResource("Curve_uqavd")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ghbs7"]
+render_priority = 0
+shader = ExtResource("11_crk7n")
+
+[sub_resource type="TextMesh" id="TextMesh_bgdcy"]
+material = SubResource("ShaderMaterial_ghbs7")
+text = "COngrats, you did it!"
+
+[node name="Viewer" type="Node3D"]
+script = ExtResource("1_031a4")
+
+[node name="CameraPivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8, 0)
+script = ExtResource("2_wq3aa")
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot"]
+transform = Transform3D(-1, 8.74228e-08, 3.82137e-15, 0, -4.37114e-08, 1, 8.74228e-08, 1, 4.37114e-08, 0, 0, 0)
+
+[node name="stand_in_floor" type="Node3D" parent="."]
+
+[node name="basic_floor" type="StaticBody3D" parent="stand_in_floor"]
+collision_mask = 3
+
+[node name="vis_floor" type="MeshInstance3D" parent="stand_in_floor/basic_floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.000411272)
+mesh = SubResource("PlaneMesh_fr568")
+script = ExtResource("3_3th1r")
+
+[node name="col_floor" type="CollisionShape3D" parent="stand_in_floor/basic_floor"]
+shape = SubResource("BoxShape3D_aevtw")
+
+[node name="character" type="CharacterBody3D" parent="."]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0.2, 0)
+collision_layer = 2
+collision_mask = 5
+script = ExtResource("3_o0nt8")
+
+[node name="pivot" type="Node3D" parent="character"]
+
+[node name="char_mesh" type="MeshInstance3D" parent="character/pivot"]
+mesh = SubResource("TorusMesh_bcvsf")
+
+[node name="char_col" type="CollisionShape3D" parent="character"]
+shape = SubResource("CylinderShape3D_vf655")
+
+[node name="exits" type="Node3D" parent="."]
+
+[node name="exit_up" type="StaticBody3D" parent="exits"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="exits/exit_up"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("TorusMesh_wvskd")
+
+[node name="Area3D" type="Area3D" parent="exits/exit_up"]
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="exits/exit_up/Area3D"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+shape = SubResource("CylinderShape3D_ouhwl")
+
+[node name="inner_ring" type="MeshInstance3D" parent="exits/exit_up"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("TorusMesh_n63fl")
+
+[node name="exit_down" type="StaticBody3D" parent="exits"]
+transform = Transform3D(1.19249e-08, 0, -1, 0, 1, 0, 1, 0, 1.19249e-08, 0, 0, -5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="exits/exit_down"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("TorusMesh_wvskd")
+
+[node name="Area3D" type="Area3D" parent="exits/exit_down"]
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="exits/exit_down/Area3D"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+shape = SubResource("CylinderShape3D_ouhwl")
+
+[node name="inner_ring" type="MeshInstance3D" parent="exits/exit_down"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("TorusMesh_n63fl")
+
+[node name="exit_left" type="StaticBody3D" parent="exits"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 5, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="exits/exit_left"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("TorusMesh_wvskd")
+
+[node name="Area3D" type="Area3D" parent="exits/exit_left"]
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="exits/exit_left/Area3D"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+shape = SubResource("CylinderShape3D_ouhwl")
+
+[node name="inner_ring" type="MeshInstance3D" parent="exits/exit_left"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("TorusMesh_n63fl")
+
+[node name="exit_right" type="StaticBody3D" parent="exits"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="exits/exit_right"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("TorusMesh_wvskd")
+
+[node name="Area3D" type="Area3D" parent="exits/exit_right"]
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="exits/exit_right/Area3D"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+shape = SubResource("CylinderShape3D_ouhwl")
+
+[node name="inner_ring" type="MeshInstance3D" parent="exits/exit_right"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("TorusMesh_n63fl")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.462018, 0.861831, -0.209254, 0.442627, -0.0196179, 0.896492, 0.768519, -0.506816, -0.390533, -1.85566, 3.15697, -2.74348)
+
+[node name="indicator_pivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 5)
+script = ExtResource("8_k7egh")
+
+[node name="indicator" type="MeshInstance3D" parent="indicator_pivot"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+mesh = SubResource("TubeTrailMesh_ea12p")
+
+[node name="messages" type="Node3D" parent="."]
+transform = Transform3D(-5, 4.37114e-07, 0, -5.21253e-15, -5.96244e-08, 5, 4.37114e-07, 5, 5.96244e-08, 0, 1, 0)
+
+[node name="congrats" type="MeshInstance3D" parent="messages"]
+mesh = SubResource("TextMesh_bgdcy")
+
+[connection signal="body_entered" from="exits/exit_up/Area3D" to="." method="_on_exit_up_entered"]
+[connection signal="body_entered" from="exits/exit_down/Area3D" to="." method="_on_exit_down_entered"]
+[connection signal="body_entered" from="exits/exit_left/Area3D" to="." method="_on_exit_left_entered"]
+[connection signal="body_entered" from="exits/exit_right/Area3D" to="." method="_on_exit_right_entered"]
