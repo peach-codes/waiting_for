@@ -22,9 +22,10 @@ func _physics_process(delta):
 	var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	
+	#broken, not today's issue
 	if follow_cam:
 		if direction:
-			rotate_y(delta * direction.x)
+			#transform.basis = transform.basis.rotated((0.0, 1.0, 0.0), 5.0))
 			velocity.z = direction.z * SPEED
 		else:
 			velocity.z = move_toward(velocity.z, 0, SPEED)

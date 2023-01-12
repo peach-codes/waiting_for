@@ -7,6 +7,10 @@ var congrats
 var flower_pivot
 var camera_pivot
 
+var flower_script := preload("res://scripts/flower_script.gd").new()
+var flower_scene := preload("res://flower.tscn").instantiate()
+
+
 const INCR = 0.1
 const DIMENSION = 20.0
 const DIM_INT = 20
@@ -14,6 +18,7 @@ const follow_cam = false
 
 var rng = RandomNumberGenerator.new()
 
+var flower_array = []
 var map_array = []
 var color_array = []
 var start: int
@@ -28,6 +33,7 @@ var current_exit: int
 var player_pos = []
 var start_pos = []
 var exit_pos
+
 
 func rand_color():
 	return Vector3(rng.randf(), rng.randf(), rng.randf())
@@ -76,8 +82,10 @@ func map_update():
 	exit_progress = 1.0 - (abs(exit_info.pop_front() - 1.0) / (initial_exit_dist))
 	start_progress = start_info.pop_front() - 1.0
 	# send "hint" info to indicators
+	#indicator is broken?
 	indicator_pivot.change_things(start_progress, start_info.pick_random())
-	flower_pivot.change_things(exit_info)
+	#broken due to new version 
+	#flower_pivot.change_things(exit_info)
 	# update floor color
 	vis_floor.change_things(exit_progress, start_progress)
 	
@@ -118,6 +126,13 @@ func map_initialize(mode):
 	print(exit, " ", exit_pos)
 	print(initial_exit_dist)
 	
+	
+	for i in range(5):
+		flower_array.append(load("res://flower.tscn").instantiate())
+		add_child(flower_array[i])
+		flower_array[i].position = Vector3(randf() * 3.0, 0.2, i)
+		
+	
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -137,9 +152,6 @@ func _ready():
 	map_update()
 	
 	
-	indicator_pivot.change_things(0.0, current_exit)
-	
-
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -153,7 +165,6 @@ func change_things(last_exit):
 	# 3 = down, 4 = left
 	# pass info along to shaders
 	# reset player
-	
 	# show success
 	# this sucks and is excessive
 	if (int(player_pos[0]) == int(exit_pos[0])) && ( int(player_pos[1]) == int(exit_pos[1]) ):

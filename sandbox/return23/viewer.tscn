@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://c1poio7f0x5gw"]
+[gd_scene load_steps=28 format=3 uid="uid://c1poio7f0x5gw"]
 
 [ext_resource type="Script" path="res://scripts/viewer.gd" id="1_av4h3"]
 [ext_resource type="Shader" path="res://shaders/simple0.gdshader" id="3_tlste"]
@@ -9,9 +9,8 @@
 [ext_resource type="Shader" path="res://shaders/inner_torus.gdshader" id="8_4vncw"]
 [ext_resource type="Script" path="res://scripts/indicator_pivot.gd" id="9_rr8dy"]
 [ext_resource type="Shader" path="res://shaders/indicator.gdshader" id="10_1vdab"]
+[ext_resource type="PackedScene" uid="uid://d1eqmb30p8pmq" path="res://flower.tscn" id="11_dfk5h"]
 [ext_resource type="Shader" path="res://shaders/text.gdshader" id="11_lhg1b"]
-[ext_resource type="Script" path="res://scripts/flower_pivot.gd" id="12_6khg7"]
-[ext_resource type="Shader" path="res://shaders/flower.gdshader" id="12_rd032"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ocfsm"]
 render_priority = 0
@@ -86,18 +85,6 @@ shader = ExtResource("11_lhg1b")
 [sub_resource type="TextMesh" id="TextMesh_bgdcy"]
 material = SubResource("ShaderMaterial_ghbs7")
 text = "COngrats, you did it!"
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_acjul"]
-render_priority = 0
-shader = ExtResource("12_rd032")
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_jcrhm"]
-material = SubResource("ShaderMaterial_acjul")
-subdivide_width = 10
-subdivide_depth = 10
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_6xftk"]
-radius = 0.7
 
 [node name="Viewer" type="Node3D"]
 script = ExtResource("1_av4h3")
@@ -233,36 +220,7 @@ mesh = SubResource("TextMesh_bgdcy")
 
 [node name="structures" type="Node3D" parent="."]
 
-[node name="flower_pivot" type="Node3D" parent="structures"]
-transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 3.4, 0.2, -2.3)
-script = ExtResource("12_6khg7")
-
-[node name="petal1" type="MeshInstance3D" parent="structures/flower_pivot"]
-mesh = SubResource("PlaneMesh_jcrhm")
-
-[node name="petal2" type="MeshInstance3D" parent="structures/flower_pivot"]
-transform = Transform3D(-0.173648, 0, 0.984808, 0, 1, 0, -0.984808, 0, -0.173648, 0, 0, 0)
-mesh = SubResource("PlaneMesh_jcrhm")
-
-[node name="petal3" type="MeshInstance3D" parent="structures/flower_pivot"]
-transform = Transform3D(-0.939693, 0, 0.34202, 0, 1, 0, -0.34202, 0, -0.939693, 0, 0, 0)
-mesh = SubResource("PlaneMesh_jcrhm")
-
-[node name="petal4" type="MeshInstance3D" parent="structures/flower_pivot"]
-transform = Transform3D(-0.766044, 0, -0.642788, 0, 1, 0, 0.642788, 0, -0.766044, 0, 0, 0)
-mesh = SubResource("PlaneMesh_jcrhm")
-
-[node name="petal5" type="MeshInstance3D" parent="structures/flower_pivot"]
-transform = Transform3D(-0.12187, 0, -0.992546, 0, 1, 0, 0.992546, 0, -0.12187, 0, 0, 0)
-mesh = SubResource("PlaneMesh_jcrhm")
-
-[node name="Area3D" type="Area3D" parent="structures/flower_pivot"]
-collision_layer = 4
-collision_mask = 2
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="structures/flower_pivot/Area3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-shape = SubResource("CylinderShape3D_6xftk")
+[node name="flower_pivot" parent="structures" instance=ExtResource("11_dfk5h")]
 
 [node name="obilisk_pivot" type="Node3D" parent="structures"]
 
