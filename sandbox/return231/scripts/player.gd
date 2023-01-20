@@ -9,20 +9,20 @@ const FACE_BACK = PI
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
-func nrr(in_rad):
+func nrr(in_rad) -> float:
 	# normalize rad rot
 	var int_rots = int(in_rad / (2 * PI))
 	var retval = in_rad - (int_rots * 2 * PI)
 	return retval
 
 
-func _ready():
+func _ready() -> void:
 	pass
 
-func _process(delta):
+func _process(delta) -> void:
 	pass
 
-func _physics_process(delta):
+func _physics_process(delta) -> void:
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y -= gravity * delta

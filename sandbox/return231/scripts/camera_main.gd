@@ -2,12 +2,12 @@ extends Node3D
 
 @onready var _player: CharacterBody3D = $"../player_main/player"
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
+
+func _ready() -> void:
 	pass
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+# this is kinda lame
+func _process(delta: float) -> void:
 	position = _player.position
 	rotation = _player.rotation

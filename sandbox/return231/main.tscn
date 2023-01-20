@@ -1,17 +1,21 @@
-[gd_scene load_steps=21 format=3 uid="uid://cx0xe743an2u2"]
+[gd_scene load_steps=38 format=3 uid="uid://c8neaqrqvaukl"]
 
 [ext_resource type="Script" path="res://scripts/camera_main.gd" id="1_iigr3"]
 [ext_resource type="Shader" path="res://shaders/floor_basic.gdshader" id="1_l05ut"]
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_wlc6o"]
 [ext_resource type="Script" path="res://scripts/player.gd" id="2_ic4wo"]
 [ext_resource type="Shader" path="res://shaders/cat_flesh.gdshader" id="4_dl8rv"]
 [ext_resource type="Shader" path="res://shaders/tail.gdshader" id="4_s462a"]
 [ext_resource type="Shader" path="res://shaders/cat_ear.gdshader" id="5_xxnyg"]
+[ext_resource type="Script" path="res://scripts/first_gui.gd" id="8_kcfuf"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_if07h"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5bch6"]
 render_priority = 0
 shader = ExtResource("1_l05ut")
+shader_parameter/test = null
+shader_parameter/points = null
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_sqcpk"]
 material = SubResource("ShaderMaterial_5bch6")
@@ -65,7 +69,84 @@ sections = 9
 [sub_resource type="BoxShape3D" id="BoxShape3D_6hrnx"]
 size = Vector3(1, 1, 1.1458)
 
+[sub_resource type="Gradient" id="Gradient_1imuk"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0, 0.819372)
+colors = PackedColorArray(0.231373, 0, 0, 1, 0, 0.129412, 0.431373, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_d381n"]
+noise_type = 3
+frequency = 0.028
+fractal_type = 0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_wx0w1"]
+width = 1000
+height = 500
+color_ramp = SubResource("Gradient_1imuk")
+noise = SubResource("FastNoiseLite_d381n")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_88vma"]
+texture = SubResource("NoiseTexture2D_wx0w1")
+region_rect = Rect2(0, 0, 512, 512)
+
+[sub_resource type="Gradient" id="Gradient_1euc3"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_mncy0"]
+seed = 5
+fractal_type = 2
+fractal_gain = 0.4
+fractal_weighted_strength = 0.11
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ku8li"]
+width = 500
+height = 500
+color_ramp = SubResource("Gradient_1euc3")
+noise = SubResource("FastNoiseLite_mncy0")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5gjea"]
+texture = SubResource("NoiseTexture2D_ku8li")
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+region_rect = Rect2(0, 0, 512, 512)
+
+[sub_resource type="Theme" id="Theme_m8si7"]
+Label/colors/font_color = Color(1, 0, 1, 1)
+Label/colors/font_shadow_color = Color(0.376471, 0.592157, 0.784314, 0.729412)
+Label/styles/normal = SubResource("StyleBoxTexture_88vma")
+ProgressBar/styles/fill = SubResource("StyleBoxTexture_5gjea")
+
+[sub_resource type="Gradient" id="Gradient_svn2e"]
+colors = PackedColorArray(0, 0, 0, 1, 0.278431, 0.258824, 0.733333, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_k40p5"]
+noise_type = 2
+fractal_type = 0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_nr5bo"]
+width = 2000
+height = 2000
+seamless = true
+color_ramp = SubResource("Gradient_svn2e")
+noise = SubResource("FastNoiseLite_k40p5")
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_bnnyx"]
+panorama = SubResource("NoiseTexture2D_nr5bo")
+filter = false
+
+[sub_resource type="Sky" id="Sky_s7ve2"]
+sky_material = SubResource("PanoramaSkyMaterial_bnnyx")
+
+[sub_resource type="Environment" id="Environment_6wt6d"]
+background_mode = 2
+sky = SubResource("Sky_s7ve2")
+volumetric_fog_density = 0.0383
+volumetric_fog_albedo = Color(0, 0.839216, 0.639216, 1)
+volumetric_fog_anisotropy = 0.05
+volumetric_fog_ambient_inject = 1.26
+volumetric_fog_sky_affect = 0.0
+
 [node name="Main" type="Node3D"]
+script = ExtResource("1_wlc6o")
 
 [node name="camera_main" type="Node3D" parent="."]
 script = ExtResource("1_iigr3")
@@ -75,12 +156,12 @@ transform = Transform3D(1, 0, 0, 0, 0.866897, 0.498488, 0, -0.498488, 0.866897, 
 
 [node name="envr_main" type="Node3D" parent="."]
 
-[node name="StaticBody3D" type="StaticBody3D" parent="envr_main"]
+[node name="floor" type="StaticBody3D" parent="envr_main"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="envr_main/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="envr_main/floor"]
 shape = SubResource("WorldBoundaryShape3D_if07h")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="envr_main/StaticBody3D"]
+[node name="floor_vis" type="MeshInstance3D" parent="envr_main/floor"]
 mesh = SubResource("PlaneMesh_sqcpk")
 skeleton = NodePath("../..")
 
@@ -139,3 +220,52 @@ transform = Transform3D(0.869495, -0.15673, -0.468417, 0, -0.948324, 0.317305, -
 light_energy = 2.5
 light_indirect_energy = 2.277
 shadow_enabled = true
+
+[node name="gui0" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+size_flags_horizontal = 8
+theme = SubResource("Theme_m8si7")
+script = ExtResource("8_kcfuf")
+
+[node name="my_Bar" type="ProgressBar" parent="gui0"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -326.0
+offset_top = -43.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="my_thing" type="Label" parent="gui0"]
+layout_mode = 0
+offset_left = -263.0
+offset_top = -539.0
+offset_right = -8.0
+offset_bottom = -476.0
+text = "How About this?"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="dist_bar" type="ProgressBar" parent="gui0"]
+layout_mode = 0
+offset_left = -1099.0
+offset_top = -594.0
+offset_right = -563.0
+offset_bottom = -556.0
+
+[node name="Node" type="Node" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Node"]
+environment = SubResource("Environment_6wt6d")
